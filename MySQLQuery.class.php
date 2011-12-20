@@ -5,6 +5,14 @@
         throw new Exception('MySQL extension needs to be installed.');
     }
 
+    // connection dependency
+    if (!class_exists('MySQLConnection')) {
+        throw new Exception('MySQLConnection needs to be loaded.');
+    }
+
+    // load MySQLConnection dependency
+    require_once 'MySQLConnection.class.php';
+
     /**
      * MySQLQuery class.
      * 
@@ -13,7 +21,8 @@
      * @author  Oliver Nassar <onassar@gmail.com>
      * @example
      * <code>
-     *     require_once APP . '/open/mysql/MySQLConnection.class.php';
+     *     require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
+     *     require_once APP . '/vendors/PHP-MySQL/MySQLQuery.class.php';
      *     $database = array(
      *         'host' => 'localhost',
      *         'port' => 3306,
@@ -21,7 +30,10 @@
      *         'password' => '<password>'
      *     );
      *     MySQLConnection::init($database);
-     *     (new MySQLQuery('USE `dbname`'));
+     *     (new MySQLQuery('USE `mysql`'));
+     *     $query = (new MySQLQuery('SELECT * FROM `user`'));
+     *     print_r($query->getResults());
+     *     exit(0);
      * </code>
      */
     class MySQLQuery
@@ -83,6 +95,7 @@
          */
         public function __construct($statement)
         {
+            // metrics/run
             $this->_statement = $statement;
             $this->_start = microtime(true);
             $this->_raw = $this->_run($statement);
@@ -93,6 +106,9 @@
             if ($this->_raw === false) {
                 throw new Exception('"' . ($statement) . '": ' . mysql_error() . '.');
             }
+
+            // log
+            $this->_log();
         }
 
         /**
