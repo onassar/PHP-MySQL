@@ -6,35 +6,43 @@
     }
 
     /**
-     * Abstract MySQLConnection class.
+     * MySQLConnection
      * 
+     * Manages the connection to a single MySQL server.
+     * 
+     * @author   Oliver Nassar <onassar@gmail.com>
      * @abstract
+     * @example
+     * <code>
+     *     require_once APP . '/open/mysql/MySQLConnection.class.php';
+     *     $database = array(
+     *         'host' => 'localhost',
+     *         'port' => 3306,
+     *         'username' => '<username>',
+     *         'password' => '<password>'
+     *     );
+     *     MySQLConnection::init($database);
+     *     $resource = MySQLConnection::getLink();
+     *     $stats = MySQLConnection::getStats();
+     * </code>
      */
     abstract class MySQLConnection
     {
         /**
-         * _deletes. Number of database 'delete' calls made.
+         * _analytics. Array of query-type frequencies.
          * 
-         * @var int
+         * @var array
          * @access protected
          */
-        protected static $_deletes = 0;
-
-        /**
-         * explains. Number of database 'explain' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_explains = 0;
-
-        /**
-         * inserts. Number of database 'insert' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_inserts = 0;
+        protected static $_analytics = array(
+            'deletes' => 0,
+            'explains' => 0,
+            'inserts' => 0,
+            'selects' => 0,
+            'shows' => 0,
+            'updates' => 0,
+            'uses' => 0
+        );
 
         /**
          * _inserted
@@ -64,38 +72,6 @@
         protected static $_resource;
 
         /**
-         * selects. Number of database 'select' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_selects = 0;
-
-        /**
-         * selects. Number of database 'show' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_shows = 0;
-
-        /**
-         * updates. Number of database 'update' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_updates = 0;
-
-        /**
-         * uses. Number of database 'uses' calls made.
-         * 
-         * @var int
-         * @access protected
-         */
-        protected static $_uses = 0;
-
-        /**
          * getDeletes function. Returns the number of 'delete' statements made.
          * 
          * @access public
@@ -104,7 +80,7 @@
          */
         public static function getDeletes()
         {
-            return self::$_deletes;
+            return self::$_analytics['deletes'];
         }
 
         /**
@@ -116,7 +92,7 @@
          */
         public static function getExplains()
         {
-            return self::$_explains;
+            return self::$_analytics['explains'];
         }
 
         /**
@@ -132,27 +108,6 @@
         }
 
         /**
-         * getQueries function. Returns an array of metric-focused MySQLQuery
-         *     objects, useful for measuring query performance.
-         * 
-         * @access public
-         * @static
-         * @return array
-         */
-        public static function getQueries()
-        {
-            $queries = array();
-            foreach (self::$_queries as $query) {
-                $queries[] = array(
-                    'duration' => $query->getDuration(),
-                    'statement' => $query->getStatement(),
-                    'type' => $query->getType()
-                );
-            }
-            return $queries;
-        }
-
-        /**
          * getInserts function. Returns the number of 'inserts' statements made.
          * 
          * @access public
@@ -161,28 +116,7 @@
          */
         public static function getInserts()
         {
-            return self::$_inserts;
-        }
-
-        /**
-         * getResource function.
-         * 
-         * @access public
-         * @static
-         * @param array $config
-         * @return void
-         */
-        public static function init($config)
-        {
-            $resource = mysql_pconnect(
-                ($config['host']) . ':' . ($config['port']),
-                $config['username'],
-                $config['password']
-            );
-            if ($resource === false) {
-                throw new Exception('Couldn\'t establish connection: ' . mysql_error() . '.');
-            }
-            self::$_resource = $resource;
+            return self::$_analytics['inserts'];
         }
 
         /**
@@ -198,6 +132,34 @@
         }
 
         /**
+         * getQueries function. Returns an array of metric-focused MySQLQuery
+         *     objects, useful for measuring query performance.
+         * 
+         * @access public
+         * @static
+         * @param boolean $format (default: true)
+         * @return array
+         */
+        public static function getQueries($format = true)
+        {
+            // raw response
+            if ($format === false) {
+                return self::$_queries;
+            }
+
+            // formatted response
+            $queries = array();
+            foreach (self::$_queries as $query) {
+                $queries[] = array(
+                    'duration' => $query->getDuration(),
+                    'statement' => $query->getStatement(),
+                    'type' => $query->getType()
+                );
+            }
+            return $queries;
+        }
+
+        /**
          * getSelects function. Returns the number of 'select' statements made.
          * 
          * @access public
@@ -206,7 +168,7 @@
          */
         public static function getSelects()
         {
-            return self::$_selects;
+            return self::$_analytics['selects'];
         }
 
         /**
@@ -218,7 +180,7 @@
          */
         public static function getShows()
         {
-            return self::$_shows;
+            return self::$_analytics['shows'];
         }
 
         /**
@@ -230,16 +192,9 @@
          */
         public static function getStats()
         {
-            return array(
-                'deletes' => self::$_deletes,
-                'explains' => self::$_explains,
-                'inserts' => self::$_inserts,
-                'selects' => self::$_selects,
-                'shows' => self::$_shows,
-                'updates' => self::$_updates,
-                'uses' => self::$_uses,
-                'total' => count(self::$_queries)
-            );
+            $stats = $this->_analytics;
+            $stats['total'] = count(self::$_queries);
+            return $stats;
         }
 
         /**
@@ -251,7 +206,7 @@
          */
         public static function getUpdates()
         {
-            return self::$_updates;
+            return self::$_analytics['updates'];
         }
 
         /**
@@ -263,7 +218,28 @@
          */
         public static function getUses()
         {
-            return self::$_uses;
+            return self::$_analytics['uses'];
+        }
+
+        /**
+         * getResource function.
+         * 
+         * @access public
+         * @static
+         * @param array $config
+         * @return void
+         */
+        public static function init(array $config)
+        {
+            $resource = mysql_pconnect(
+                ($config['host']) . ':' . ($config['port']),
+                $config['username'],
+                $config['password']
+            );
+            if ($resource === false) {
+                throw new Exception('Couldn\'t establish connection: ' . mysql_error() . '.');
+            }
+            self::$_resource = $resource;
         }
 
         /**
@@ -272,7 +248,7 @@
          * 
          * @access public
          * @static
-         * @param MySQLQuery $mySQLQuery MySQLQuery
+         * @param MySQLQuery $mySQLQuery
          * @return void
          */
         public static function log(MySQLQuery $mySQLQuery)
@@ -280,21 +256,19 @@
             array_push(self::$_queries, $mySQLQuery);
             $type = $mySQLQuery->getType();
             if ($type === 'delete') {
-                ++self::$_deletes;
+                ++self::$_analytics['deletes'];
             } elseif ($type === 'explain') {
-                ++self::$_explains;
+                ++self::$_analytics['explains'];
             } elseif ($type === 'insert') {
-                ++self::$_inserts;
+                ++self::$_analytics['inserts'];
             } elseif ($type === 'select') {
-                ++self::$_selects;
+                ++self::$_analytics['selects'];
             } elseif ($type === 'show') {
-                ++self::$_shows;
+                ++self::$_analytics['shows'];
             } elseif ($type === 'update') {
-                ++self::$_updates;
+                ++self::$_analytics['updates'];
             } elseif ($type === 'use') {
-                ++self::$_uses;
+                ++self::$_analytics['uses'];
             }
         }
     }
-
-?>

@@ -8,6 +8,21 @@
     /**
      * MySQLQuery class.
      * 
+     * Performs and measures queries against a persistant MySQL connection.
+     * 
+     * @author  Oliver Nassar <onassar@gmail.com>
+     * @example
+     * <code>
+     *     require_once APP . '/open/mysql/MySQLConnection.class.php';
+     *     $database = array(
+     *         'host' => 'localhost',
+     *         'port' => 3306,
+     *         'username' => '<username>',
+     *         'password' => '<password>'
+     *     );
+     *     MySQLConnection::init($database);
+     *     (new MySQLQuery('USE `dbname`'));
+     * </code>
      */
     class MySQLQuery
     {
