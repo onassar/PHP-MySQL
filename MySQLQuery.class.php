@@ -14,7 +14,7 @@
     require_once 'MySQLConnection.class.php';
 
     /**
-     * MySQLQuery class.
+     * MySQLQuery
      * 
      * Performs and measures queries against a persistant MySQL connection.
      * 
