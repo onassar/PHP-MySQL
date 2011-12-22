@@ -54,7 +54,7 @@
         protected static $_inserted;
 
         /**
-         * queries. Array contain MySQLQuery objects, useful for logging and
+         * _queries. Array contain MySQLQuery objects, useful for logging and
          *     performance measurements.
          * 
          * (default value: array())
@@ -65,12 +65,20 @@
         protected static $_queries = array();
 
         /**
-         * resource. A resource link to a persistant mysql connection.
+         * _resource. A resource link to a persistant mysql connection.
          * 
          * @var resource
          * @access protected
          */
         protected static $_resource;
+
+        /**
+         * _timeout
+         * 
+         * @var integer (default: 5)
+         * @access protected
+         */
+        protected static $_timeout = 5;
 
         /**
          * getDeletes function. Returns the number of 'delete' statements made.
@@ -232,6 +240,10 @@
          */
         public static function init(array $config)
         {
+            // init setting
+            ini_set('mysql.connect_timeout', self::$_timeout);
+
+            // resource connection
             $resource = mysql_pconnect(
                 ($config['host']) . ':' . ($config['port']),
                 $config['username'],
@@ -271,5 +283,18 @@
             } elseif ($type === 'use') {
                 ++self::$_analytics['uses'];
             }
+        }
+
+        /**
+         * setTimeout function.
+         * 
+         * @access public
+         * @static
+         * @param integer $timeout
+         * @return void
+         */
+        public static function setTimeout($timeout)
+        {
+            self::$_timeout = $timeout;
         }
     }
