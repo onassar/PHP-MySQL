@@ -12,6 +12,10 @@ ability to determine a queries execution length/duration. Similarly, the static
 queries executed grouped by type, as well as a collection of the total queries
 executed during the length of the request.
 
+**Note:** Neither class filters, encodes or secures the queries being run. This
+is a feature, not a bug. All data filtration should be done elsewhere;
+don&#039;t rely on this library to aid with that.
+
 ### Sample MySQL Connection
 
     // load dependency
