@@ -21,8 +21,11 @@
      * @author  Oliver Nassar <onassar@gmail.com>
      * @example
      * <code>
+     *     // load dependencies
      *     require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
      *     require_once APP . '/vendors/PHP-MySQL/MySQLQuery.class.php';
+     * 
+     *     // database credentials and connection
      *     $database = array(
      *         'host' => 'localhost',
      *         'port' => 3306,
@@ -30,6 +33,8 @@
      *         'password' => '<password>'
      *     );
      *     MySQLConnection::init($database);
+     * 
+     *     // database select; query; output
      *     (new MySQLQuery('USE `mysql`'));
      *     $query = (new MySQLQuery('SELECT * FROM `user`'));
      *     print_r($query->getResults());
@@ -39,58 +44,70 @@
     class MySQLQuery
     {
         /**
-         * _end. Microseconds marking the end of the query, after having run.
+         * _end
          * 
-         * @var float
+         * Microseconds marking the end of the query, after having run.
+         * 
+         * @var    float
          * @access protected
          */
         protected $_end;
 
         /**
-         * _raw. Results after a query has been executed.
+         * _raw
          * 
-         * @var mixed
+         * Results after a query has been executed.
+         * 
+         * @var    mixed
          * @access protected
          */
         protected $_raw;
 
         /**
-         * _results. Formatted results available for return and usage (not raw).
+         * _results
          * 
-         * @var mixed
+         * Formatted results available for return and usage (not raw).
+         * 
+         * @var    mixed
          * @access protected
          */
         protected $_results;
 
         /**
-         * _start. Microseconds marking the start of the query.
+         * _start
          * 
-         * @var float
+         * Microseconds marking the start of the query.
+         * 
+         * @var    float
          * @access protected
          */
         protected $_start;
 
         /**
-         * _statement. SQL statement that will be/has been run.
+         * _statement
          * 
-         * @var string
+         * SQL statement that will be/has been run.
+         * 
+         * @var    string
          * @access protected
          */
         protected $_statement;
 
         /**
-         * _type. Type of query being run (select, update, etc.)
+         * _type
          * 
-         * @var string
+         * Type of query being run (select, update, etc.)
+         * 
+         * @var    string
          * @access protected
          */
         protected $_type;
 
         /**
-         * __construct function.
+         * __construct
          * 
          * @access public
-         * @param string $statement
+         * @param  string $statement
          * @return void
          */
         public function __construct($statement)
@@ -112,7 +129,9 @@
         }
 
         /**
-         * _format function. Formats a raw result set if applicable.
+         * _format
+         * 
+         * Formats a raw result set if applicable.
          * 
          * @access protected
          * @return void
@@ -142,7 +161,7 @@
         }
 
         /**
-         * _log function.
+         * _log
          * 
          * @access protected
          * @return void
@@ -153,10 +172,10 @@
         }
 
         /**
-         * _run function.
+         * _run
          * 
          * @access protected
-         * @param string $statement
+         * @param  string $statement
          * @return void
          */
         protected function _run($statement)
@@ -165,7 +184,9 @@
         }
 
         /**
-         * getDuration function. Returns query-execution duration.
+         * getDuration
+         * 
+         * Returns query-execution duration.
          * 
          * @access public
          * @return float
@@ -177,7 +198,9 @@
         }
 
         /**
-         * getResults function. Returns formatted results of the executed query.
+         * getResults
+         * 
+         * Returns formatted results of the executed query.
          * 
          * @access public
          * @return array
@@ -191,7 +214,9 @@
         }
 
         /**
-         * getStatement function. Returns the SQL statement issued.
+         * getStatement
+         * 
+         * Returns the SQL statement issued.
          * 
          * @access public
          * @return string
@@ -202,7 +227,9 @@
         }
 
         /**
-         * getType function. Returns the type of query run.
+         * getType
+         * 
+         * Returns the type of query run.
          * 
          * @access public
          * @return string

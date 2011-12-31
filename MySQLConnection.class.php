@@ -14,7 +14,10 @@
      * @abstract
      * @example
      * <code>
+     *     // load dependency
      *     require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
+     * 
+     *     // database credentials and connection
      *     $database = array(
      *         'host' => 'localhost',
      *         'port' => 3306,
@@ -22,6 +25,8 @@
      *         'password' => '<password>'
      *     );
      *     MySQLConnection::init($database);
+     * 
+     *     // output resource object
      *     $resource = MySQLConnection::getLink();
      *     print_r($resource);
      *     exit(0);
@@ -30,9 +35,11 @@
     abstract class MySQLConnection
     {
         /**
-         * _analytics. Array of query-type frequencies.
+         * _analytics
          * 
-         * @var array
+         * Array of query-type frequencies.
+         * 
+         * @var    array
          * @access protected
          */
         protected static $_analytics = array(
@@ -48,26 +55,30 @@
         /**
          * _inserted
          * 
-         * @var int
+         * @var    integer
          * @access protected
          */
         protected static $_inserted;
 
         /**
-         * _queries. Array contain MySQLQuery objects, useful for logging and
-         *     performance measurements.
+         * _queries
+         * 
+         * Array contain MySQLQuery objects, useful for logging and performance
+         * measurements.
          * 
          * (default value: array())
          * 
-         * @var array
+         * @var    array
          * @access protected
          */
         protected static $_queries = array();
 
         /**
-         * _resource. A resource link to a persistant mysql connection.
+         * _resource
          * 
-         * @var resource
+         * A resource link to a persistant mysql connection.
+         * 
+         * @var    resource
          * @access protected
          */
         protected static $_resource;
@@ -75,17 +86,19 @@
         /**
          * _timeout
          * 
-         * @var integer (default: 5)
+         * @var    integer (default: 5)
          * @access protected
          */
         protected static $_timeout = 5;
 
         /**
-         * getDeletes function. Returns the number of 'delete' statements made.
+         * getDeletes
+         * 
+         * Returns the number of 'delete' statements made.
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getDeletes()
         {
@@ -93,11 +106,13 @@
         }
 
         /**
-         * getExplains function. Returns the number of 'explain' statements made.
+         * getExplains
+         * 
+         * Returns the number of 'explain' statements made.
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getExplains()
         {
@@ -105,11 +120,11 @@
         }
 
         /**
-         * getInserted function.
+         * getInserted
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getInserted()
         {
@@ -117,11 +132,13 @@
         }
 
         /**
-         * getInserts function. Returns the number of 'inserts' statements made.
+         * getInserts
+         * 
+         * Returns the number of 'inserts' statements made.
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getInserts()
         {
@@ -129,7 +146,7 @@
         }
 
         /**
-         * getLink function.
+         * getLink
          * 
          * @access public
          * @static
@@ -141,12 +158,14 @@
         }
 
         /**
-         * getQueries function. Returns an array of metric-focused MySQLQuery
-         *     objects, useful for measuring query performance.
+         * getQueries
+         * 
+         * Returns an array of metric-focused MySQLQuery objects, useful for
+         * measuring query performance.
          * 
          * @access public
          * @static
-         * @param boolean $format (default: true)
+         * @param  boolean $format (default: true)
          * @return array
          */
         public static function getQueries($format = true)
@@ -169,7 +188,9 @@
         }
 
         /**
-         * getSelects function. Returns the number of 'select' statements made.
+         * getSelects
+         * 
+         * Returns the number of 'select' statements made.
          * 
          * @access public
          * @static
@@ -181,7 +202,9 @@
         }
 
         /**
-         * getShows function. Returns the number of 'show' statements made.
+         * getShows
+         * 
+         * Returns the number of 'show' statements made.
          * 
          * @access public
          * @static
@@ -193,7 +216,7 @@
         }
 
         /**
-         * getStats function.
+         * getStats
          * 
          * @access public
          * @static
@@ -207,7 +230,9 @@
         }
 
         /**
-         * getUpdates function. Returns the number of 'update' statements made.
+         * getUpdates
+         * 
+         * Returns the number of 'update' statements made.
          * 
          * @access public
          * @static
@@ -219,7 +244,9 @@
         }
 
         /**
-         * getUses function. Returns the number of 'use' statements made.
+         * getUses
+         * 
+         * Returns the number of 'use' statements made.
          * 
          * @access public
          * @static
@@ -231,11 +258,11 @@
         }
 
         /**
-         * getResource function.
+         * getResource
          * 
          * @access public
          * @static
-         * @param array $config
+         * @param  array $config
          * @return void
          */
         public static function init(array $config)
@@ -256,12 +283,13 @@
         }
 
         /**
-         * log function. Stores local MySQL query reference and increments
-         *     statistics.
+         * log
+         * 
+         * Stores local MySQL query reference and increments statistics.
          * 
          * @access public
          * @static
-         * @param MySQLQuery $mySQLQuery
+         * @param  MySQLQuery $mySQLQuery
          * @return void
          */
         public static function log(MySQLQuery $mySQLQuery)
@@ -286,11 +314,11 @@
         }
 
         /**
-         * setTimeout function.
+         * setTimeout
          * 
          * @access public
          * @static
-         * @param integer $timeout
+         * @param  integer $timeout
          * @return void
          */
         public static function setTimeout($timeout)
