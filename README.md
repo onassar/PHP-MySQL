@@ -17,6 +17,9 @@ was done intentionally to decouple data processing logic from database access.
 
 ### Sample MySQL Connection
 
+``` php
+<?php
+
     // load dependency
     require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
     
@@ -34,7 +37,12 @@ was done intentionally to decouple data processing logic from database access.
     print_r($resource);
     exit(0);
 
+```
+
 ### Sample MySQL Query
+
+``` php
+<?php
 
     // load dependencies
     require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
@@ -54,3 +62,5 @@ was done intentionally to decouple data processing logic from database access.
     $query = (new MySQLQuery('SELECT * FROM `user`'));
     print_r($query->getResults());
     exit(0);
+
+```
