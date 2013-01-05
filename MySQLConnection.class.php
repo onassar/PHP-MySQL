@@ -92,6 +92,22 @@
         protected static $_timeout = 5;
 
         /**
+         * getCumulativeQueryDuration
+         * 
+         * @access public
+         * @static
+         * @return integer
+         */
+        public static function getCumulativeQueryDuration()
+        {
+            $cumulativeTime = 0;
+            foreach (self::$_queries as $query) {
+                $cumulativeTime += $query->getDuration();
+            }
+            return $cumulativeTime;
+        }
+
+        /**
          * getNumberOfDeleteQueries
          * 
          * Returns the number of 'delete' statements made.
