@@ -92,7 +92,7 @@
         protected static $_timeout = 5;
 
         /**
-         * getDeletes
+         * getNumberOfDeleteQueries
          * 
          * Returns the number of 'delete' statements made.
          * 
@@ -100,13 +100,13 @@
          * @static
          * @return integer
          */
-        public static function getDeletes()
+        public static function getNumberOfDeleteQueries()
         {
             return self::$_analytics['deletes'];
         }
 
         /**
-         * getExplains
+         * getNumberOfExplainQueries
          * 
          * Returns the number of 'explain' statements made.
          * 
@@ -114,25 +114,25 @@
          * @static
          * @return integer
          */
-        public static function getExplains()
+        public static function getNumberOfExplainQueries()
         {
             return self::$_analytics['explains'];
         }
 
         /**
-         * getInserted
+         * getInsertedId
          * 
          * @access public
          * @static
          * @return integer
          */
-        public static function getInserted()
+        public static function getInsertedId()
         {
             return mysql_insert_id(self::$_resource);
         }
 
         /**
-         * getInserts
+         * getNumberOfInsertQueries
          * 
          * Returns the number of 'inserts' statements made.
          * 
@@ -140,7 +140,7 @@
          * @static
          * @return integer
          */
-        public static function getInserts()
+        public static function getNumberOfInsertQueries()
         {
             return self::$_analytics['inserts'];
         }
@@ -188,7 +188,7 @@
         }
 
         /**
-         * getSelects
+         * getNumberOfSelectQueries
          * 
          * Returns the number of 'select' statements made.
          * 
@@ -196,13 +196,13 @@
          * @static
          * @return int
          */
-        public static function getSelects()
+        public static function getNumberOfSelectQueries()
         {
             return self::$_analytics['selects'];
         }
 
         /**
-         * getShows
+         * getNumberOfShowQueries
          * 
          * Returns the number of 'show' statements made.
          * 
@@ -210,7 +210,7 @@
          * @static
          * @return int
          */
-        public static function getShows()
+        public static function getNumberOfShowQueries()
         {
             return self::$_analytics['shows'];
         }
@@ -230,7 +230,7 @@
         }
 
         /**
-         * getUpdates
+         * getNumberOfUpdateQueries
          * 
          * Returns the number of 'update' statements made.
          * 
@@ -238,13 +238,13 @@
          * @static
          * @return int
          */
-        public static function getUpdates()
+        public static function getNumberOfUpdateQueries()
         {
             return self::$_analytics['updates'];
         }
 
         /**
-         * getUses
+         * getNumberOfUseQueries
          * 
          * Returns the number of 'use' statements made.
          * 
@@ -252,7 +252,7 @@
          * @static
          * @return int
          */
-        public static function getUses()
+        public static function getNumberOfUseQueries()
         {
             return self::$_analytics['uses'];
         }
