@@ -287,7 +287,7 @@
             ini_set('mysql.connect_timeout', self::$_timeout);
 
             // resource connection
-            $resource = mysql_pconnect(
+            $resource = mysql_connect(
                 ($config['host']) . ':' . ($config['port']),
                 $config['username'],
                 $config['password']
