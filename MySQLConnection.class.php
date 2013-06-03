@@ -53,6 +53,14 @@
         );
 
         /**
+         * _benchmark
+         * 
+         * @var    boolean (default: false)
+         * @access protected
+         */
+        protected static $_benchmark = false;
+
+        /**
          * _inserted
          * 
          * @var    integer
@@ -279,12 +287,16 @@
          * @access public
          * @static
          * @param  array $config
+         * @param  boolean $benchmark (default: false)
          * @return void
          */
-        public static function init(array $config)
+        public static function init(array $config, $benchmark = false)
         {
             // init setting
             ini_set('mysql.connect_timeout', self::$_timeout);
+
+            // benchmark setting (for logging duration)
+            self::$_benchmark = $benchmark;
 
             // resource connection
             $resource = mysql_connect(
@@ -326,6 +338,14 @@
                 ++self::$_analytics['updates'];
             } elseif ($type === 'use') {
                 ++self::$_analytics['uses'];
+            }
+
+            // If queries ought to be benchmarked
+            if (self::$_benchmark === true) {
+                error_log(
+                    $mySQLQuery->getDuration() . ' - ' .
+                    $mySQLQuery->getStatement()
+                );
             }
         }
 
