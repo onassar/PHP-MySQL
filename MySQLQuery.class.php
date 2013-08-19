@@ -118,7 +118,7 @@
             $this->_raw = $this->_run($statement);
             $this->_end = microtime(true);
             $this->_type = strtolower(current(explode(' ', $this->_statement)));
-
+el($this->getDuration() . ' // ' . ($statement));
             // query failed
             if ($this->_raw === false) {
                 throw new Exception('"' . ($statement) . '": ' . mysql_error() . '.');
@@ -153,6 +153,7 @@
                     foreach ($results as &$property) {
                         $property = array_shift($property);
                     }
+                    unset($property);// See: http://php.net/manual/en/language.references.unset.php
                 }
 
                 // store results
