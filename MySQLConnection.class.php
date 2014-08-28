@@ -300,9 +300,11 @@
 
             // resource connection
             $resource = mysqli_connect(
-                ($config['host']) . ':' . ($config['port']),
+                $config['host'],
                 $config['username'],
-                $config['password']
+                $config['password'],
+                $config['database'],
+                $config['port']
             );
             if ($resource === false) {
                 throw new Exception('Couldn\'t establish connection: ' . mysqli_error() . '.');
