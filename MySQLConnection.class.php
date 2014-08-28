@@ -152,7 +152,7 @@
          */
         public static function getInsertedId()
         {
-            return mysqli_insert_id(self::$_resource);
+            return self::$_resource->insert_id;
         }
 
         /**
@@ -174,7 +174,7 @@
          * 
          * @access public
          * @static
-         * @return resource
+         * @return mysqli
          */
         public static function getLink()
         {
@@ -218,7 +218,7 @@
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getNumberOfSelectQueries()
         {
@@ -232,7 +232,7 @@
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getNumberOfShowQueries()
         {
@@ -260,7 +260,7 @@
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getNumberOfUpdateQueries()
         {
@@ -274,7 +274,7 @@
          * 
          * @access public
          * @static
-         * @return int
+         * @return integer
          */
         public static function getNumberOfUseQueries()
         {
@@ -299,15 +299,17 @@
             self::$_benchmark = $benchmark;
 
             // resource connection
-            $resource = mysqli_connect(
+            $resource = (new mysqli(
                 $config['host'],
                 $config['username'],
                 $config['password'],
                 $config['database'],
                 $config['port']
-            );
+            ));
             if ($resource === false) {
-                throw new Exception('Couldn\'t establish connection: ' . mysqli_error() . '.');
+                throw new Exception(
+                    'Couldn\'t establish connection: ' . $resource->error . '.'
+                );
             }
             self::$_resource = $resource;
         }

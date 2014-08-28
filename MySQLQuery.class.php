@@ -121,7 +121,10 @@
 
             // query failed
             if ($this->_raw === false) {
-                throw new Exception('"' . ($statement) . '": ' . mysqli_error() . '.');
+                $resource = MySQLConnection::getLink();
+                throw new Exception(
+                    '"' . ($statement) . '": ' . ($resource->error) . '.'
+                );
             }
 
             // log
@@ -141,7 +144,7 @@
             $this->_results = $this->_raw;
             if (in_array($this->_type, array('explain', 'select', 'show'))) {
                 $results = array();
-                while ($results[] = mysqli_fetch_assoc($this->_raw)) { }
+                while ($results[] = $this->_results->fetch_assoc()) { }
 
                 // since results will add an extra empty value
                 array_pop($results);
@@ -181,7 +184,7 @@
          */
         protected function _run($statement)
         {
-            return mysqli_query($statement, MySQLConnection::getLink());
+            return MySQLConnection::getLink()->query($statement);
         }
 
         /**
