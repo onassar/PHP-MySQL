@@ -152,7 +152,7 @@
          */
         public static function getInsertedId()
         {
-            return mysql_insert_id(self::$_resource);
+            return mysqli_insert_id(self::$_resource);
         }
 
         /**
@@ -299,13 +299,13 @@
             self::$_benchmark = $benchmark;
 
             // resource connection
-            $resource = mysql_connect(
+            $resource = mysqli_connect(
                 ($config['host']) . ':' . ($config['port']),
                 $config['username'],
                 $config['password']
             );
             if ($resource === false) {
-                throw new Exception('Couldn\'t establish connection: ' . mysql_error() . '.');
+                throw new Exception('Couldn\'t establish connection: ' . mysqli_error() . '.');
             }
             self::$_resource = $resource;
         }
