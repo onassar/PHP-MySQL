@@ -136,30 +136,41 @@
          * 
          * Formats a raw result set if applicable.
          * 
+         * @note   The complicated key / value logic below is to prevent using
+         *         references within the array, as I was running into issues in
+         *         last version of this method that I just do not want to deal
+         *         with at the moment. So while it's a big uglier, it should
+         *         work quite dependably.
          * @access protected
          * @return void
          */
         protected function _format()
         {
             $this->_results = $this->_raw;
-            if (in_array($this->_type, array('explain', 'select', 'show'))) {
+            if (in_array($this->_type, array('explain', 'select'))) {
                 $results = array();
-                while ($results[] = $this->_results->fetch_assoc()) { }
-
-                // since results will add an extra empty value
-                array_pop($results);
-
-                // show based (used for database table retrieval)
-                if ($this->_type === 'show') {
-
-                    // remove nested tree structure (eg. for `SHOW TABLES`)
-                    foreach ($results as &$property) {
-                        $property = array_shift($property);
-                    }
-                    unset($property);// See: http://php.net/manual/en/language.references.unset.php
+                while($result = $this->_results->fetch_assoc()) {
+                    $results[] = $result;
                 }
-
-                // store results
+                $this->_results = $results;
+            } else if (in_array($this->_type, array('show'))) {
+                $results = array();
+                while($result = $this->_results->fetch_array()) {
+                    $results[] = $result;
+                }
+                if (strstr($this->_statement, 'SHOW TABLES') !== false) {
+                    foreach ($results as $key => $value) {
+                        $results[$key] = $value[0];
+                    }
+                } elseif (strstr($this->_statement, 'SHOW VARIABLES') !== false) {
+                    foreach ($results as $key => $result) {
+                        foreach ($result as $secondaryKey => $value) {
+                            if (is_numeric($secondaryKey) === true) {
+                                unset($results[$key][$secondaryKey]);
+                            }
+                        }
+                    }
+                }
                 $this->_results = $results;
             }
         }
