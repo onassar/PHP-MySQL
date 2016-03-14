@@ -158,11 +158,20 @@
                 while($result = $this->_results->fetch_array()) {
                     $results[] = $result;
                 }
-                if (strstr($this->_statement, 'SHOW TABLES') !== false) {
+                $lowercase = strtolower($this->_statement);
+                if (strstr($lowercase, 'show tables') !== false) {
                     foreach ($results as $key => $value) {
                         $results[$key] = $value[0];
                     }
-                } elseif (strstr($this->_statement, 'SHOW VARIABLES') !== false) {
+                } elseif (strstr($lowercase, 'show variables') !== false) {
+                    foreach ($results as $key => $result) {
+                        foreach ($result as $secondaryKey => $value) {
+                            if (is_numeric($secondaryKey) === true) {
+                                unset($results[$key][$secondaryKey]);
+                            }
+                        }
+                    }
+                } elseif (strstr($lowercase, 'show index') !== false) {
                     foreach ($results as $key => $result) {
                         foreach ($result as $secondaryKey => $value) {
                             if (is_numeric($secondaryKey) === true) {
