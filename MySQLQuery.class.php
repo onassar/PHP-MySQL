@@ -1,12 +1,12 @@
 <?php
 
     // dependecy checks
-    if (!in_array('mysql', get_loaded_extensions())) {
+    if (in_array('mysql', get_loaded_extensions()) === false) {
         throw new Exception('MySQL extension needs to be installed.');
     }
 
     // connection dependency
-    if (!class_exists('MySQLConnection')) {
+    if (class_exists('MySQLConnection') === false) {
         throw new Exception('MySQLConnection needs to be loaded.');
     }
 
@@ -48,8 +48,8 @@
          * 
          * Microseconds marking the end of the query, after having run.
          * 
-         * @var    float
-         * @access protected
+         * @var     float
+         * @access  protected
          */
         protected $_end;
 
@@ -58,8 +58,8 @@
          * 
          * Results after a query has been executed.
          * 
-         * @var    mixed
-         * @access protected
+         * @var     mixed
+         * @access  protected
          */
         protected $_raw;
 
@@ -68,8 +68,8 @@
          * 
          * Formatted results available for return and usage (not raw).
          * 
-         * @var    mixed
-         * @access protected
+         * @var     mixed
+         * @access  protected
          */
         protected $_results;
 
@@ -78,8 +78,8 @@
          * 
          * Microseconds marking the start of the query.
          * 
-         * @var    float
-         * @access protected
+         * @var     float
+         * @access  protected
          */
         protected $_start;
 
@@ -88,8 +88,8 @@
          * 
          * SQL statement that will be/has been run.
          * 
-         * @var    string
-         * @access protected
+         * @var     string
+         * @access  protected
          */
         protected $_statement;
 
@@ -98,17 +98,17 @@
          * 
          * Type of query being run (select, update, etc.)
          * 
-         * @var    string
-         * @access protected
+         * @var     string
+         * @access  protected
          */
         protected $_type;
 
         /**
          * __construct
          * 
-         * @access public
-         * @param  string $statement
-         * @return void
+         * @access  public
+         * @param   string $statement
+         * @return  void
          */
         public function __construct($statement)
         {
@@ -141,21 +141,21 @@
          *         last version of this method that I just do not want to deal
          *         with at the moment. So while it's a big uglier, it should
          *         work quite dependably.
-         * @access protected
-         * @return void
+         * @access  protected
+         * @return  void
          */
         protected function _format()
         {
             $this->_results = $this->_raw;
-            if (in_array($this->_type, array('explain', 'select'))) {
+            if (in_array($this->_type, array('explain', 'select')) === true) {
                 $results = array();
-                while($result = $this->_results->fetch_assoc()) {
+                while ($result = $this->_results->fetch_assoc()) {
                     $results[] = $result;
                 }
                 $this->_results = $results;
-            } else if (in_array($this->_type, array('show'))) {
+            } else if (in_array($this->_type, array('show')) === true) {
                 $results = array();
-                while($result = $this->_results->fetch_array()) {
+                while ($result = $this->_results->fetch_array()) {
                     $results[] = $result;
                 }
                 $lowercase = strtolower($this->_statement);
@@ -187,8 +187,8 @@
         /**
          * _log
          * 
-         * @access protected
-         * @return void
+         * @access  protected
+         * @return  void
          */
         protected function _log()
         {
@@ -198,9 +198,9 @@
         /**
          * _run
          * 
-         * @access protected
-         * @param  string $statement
-         * @return void
+         * @access  protected
+         * @param   string $statement
+         * @return  void
          */
         protected function _run($statement)
         {
@@ -212,8 +212,8 @@
          * 
          * Returns query-execution duration.
          * 
-         * @access public
-         * @return float
+         * @access  public
+         * @return  float
          */
         public function getDuration()
         {
@@ -226,8 +226,8 @@
          * 
          * Returns formatted results of the executed query.
          * 
-         * @access public
-         * @return array
+         * @access  public
+         * @return  array
          */
         public function getResults()
         {
@@ -242,8 +242,8 @@
          * 
          * Returns the SQL statement issued.
          * 
-         * @access public
-         * @return string
+         * @access  public
+         * @return  string
          */
         public function getStatement()
         {
@@ -255,8 +255,8 @@
          * 
          * Returns the type of query run.
          * 
-         * @access public
-         * @return string
+         * @access  public
+         * @return  string
          */
         public function getType()
         {

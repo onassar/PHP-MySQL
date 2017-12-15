@@ -1,7 +1,7 @@
 <?php
 
     // dependecy checks
-    if (!in_array('mysql', get_loaded_extensions())) {
+    if (in_array('mysql', get_loaded_extensions()) === false) {
         throw new Exception('MySQL extension needs to be installed.');
     }
 
@@ -10,7 +10,7 @@
      * 
      * Manages the connection to a single MySQL server.
      * 
-     * @author   Oliver Nassar <onassar@gmail.com>
+     * @author  Oliver Nassar <onassar@gmail.com>
      * @abstract
      * @example
      * <code>
@@ -39,8 +39,8 @@
          * 
          * Array of query-type frequencies.
          * 
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected static $_analytics = array(
             'deletes' => 0,
@@ -55,16 +55,16 @@
         /**
          * _benchmark
          * 
-         * @var    boolean (default: false)
-         * @access protected
+         * @var     boolean (default: false)
+         * @access  protected
          */
         protected static $_benchmark = false;
 
         /**
          * _inserted
          * 
-         * @var    integer
-         * @access protected
+         * @var     integer
+         * @access  protected
          */
         protected static $_inserted;
 
@@ -76,8 +76,8 @@
          * 
          * (default value: array())
          * 
-         * @var    array
-         * @access protected
+         * @var     array
+         * @access  protected
          */
         protected static $_queries = array();
 
@@ -86,25 +86,25 @@
          * 
          * A resource link to a persistant mysql connection.
          * 
-         * @var    resource
-         * @access protected
+         * @var     resource
+         * @access  protected
          */
         protected static $_resource;
 
         /**
          * _timeout
          * 
-         * @var    integer (default: 5)
-         * @access protected
+         * @var     integer (default: 5)
+         * @access  protected
          */
         protected static $_timeout = 5;
 
         /**
          * getCumulativeQueryDuration
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getCumulativeQueryDuration()
         {
@@ -120,9 +120,9 @@
          * 
          * Returns the number of 'delete' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfDeleteQueries()
         {
@@ -134,9 +134,9 @@
          * 
          * Returns the number of 'explain' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfExplainQueries()
         {
@@ -146,9 +146,9 @@
         /**
          * getInsertedId
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getInsertedId()
         {
@@ -160,9 +160,9 @@
          * 
          * Returns the number of 'inserts' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfInsertQueries()
         {
@@ -172,9 +172,9 @@
         /**
          * getLink
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return mysqli
+         * @return  mysqli
          */
         public static function getLink()
         {
@@ -187,10 +187,10 @@
          * Returns an array of metric-focused MySQLQuery objects, useful for
          * measuring query performance.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @param  boolean $format (default: true)
-         * @return array
+         * @param   boolean $format (default: true)
+         * @return  array
          */
         public static function getQueries($format = true)
         {
@@ -216,9 +216,9 @@
          * 
          * Returns the number of 'select' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfSelectQueries()
         {
@@ -230,9 +230,9 @@
          * 
          * Returns the number of 'show' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfShowQueries()
         {
@@ -242,9 +242,9 @@
         /**
          * getStats
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return array
+         * @return  array
          */
         public static function getStats()
         {
@@ -258,9 +258,9 @@
          * 
          * Returns the number of 'update' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfUpdateQueries()
         {
@@ -272,9 +272,9 @@
          * 
          * Returns the number of 'use' statements made.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @return integer
+         * @return  integer
          */
         public static function getNumberOfUseQueries()
         {
@@ -284,11 +284,11 @@
         /**
          * getResource
          * 
-         * @access public
+         * @access  public
          * @static
-         * @param  array $config
-         * @param  boolean $benchmark (default: false)
-         * @return void
+         * @param   array $config
+         * @param   boolean $benchmark (default: false)
+         * @return  void
          */
         public static function init(array $config, $benchmark = false)
         {
@@ -319,10 +319,10 @@
          * 
          * Stores local MySQL query reference and increments statistics.
          * 
-         * @access public
+         * @access  public
          * @static
-         * @param  MySQLQuery $mySQLQuery
-         * @return void
+         * @param   MySQLQuery $mySQLQuery
+         * @return  void
          */
         public static function log(MySQLQuery $mySQLQuery)
         {
@@ -356,10 +356,10 @@
         /**
          * setTimeout
          * 
-         * @access public
+         * @access  public
          * @static
-         * @param  integer $timeout
-         * @return void
+         * @param   integer $timeout
+         * @return  void
          */
         public static function setTimeout($timeout)
         {
