@@ -136,11 +136,11 @@
          * 
          * Formats a raw result set if applicable.
          * 
-         * @note   The complicated key / value logic below is to prevent using
-         *         references within the array, as I was running into issues in
-         *         last version of this method that I just do not want to deal
-         *         with at the moment. So while it's a big uglier, it should
-         *         work quite dependably.
+         * @note    The complicated key / value logic below is to prevent using
+         *          references within the array, as I was running into issues in
+         *          last version of this method that I just do not want to deal
+         *          with at the moment. So while it's a big uglier, it should
+         *          work quite dependably.
          * @access  protected
          * @return  void
          */
