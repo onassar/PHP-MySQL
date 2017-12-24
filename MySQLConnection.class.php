@@ -74,9 +74,7 @@
          * Array contain MySQLQuery objects, useful for logging and performance
          * measurements.
          * 
-         * (default value: array())
-         * 
-         * @var     array
+         * @var     array (default: array())
          * @access  protected
          */
         protected static $_queries = array();
