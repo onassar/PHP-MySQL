@@ -58,8 +58,8 @@ was done intentionally to decouple data processing logic from database access.
     MySQLConnection::init($database);
     
     // database select; query; output
-    (new MySQLQuery('USE `mysql`'));
-    $query = (new MySQLQuery('SELECT * FROM `user`'));
+    new MySQLQuery('USE `mysql`');
+    $query = new MySQLQuery('SELECT * FROM `user`');
     print_r($query->getResults());
     exit(0);
 

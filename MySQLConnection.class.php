@@ -297,13 +297,13 @@
             self::$_benchmark = $benchmark;
 
             // resource connection
-            $resource = (new mysqli(
+            $resource = new mysqli(
                 $config['host'],
                 $config['username'],
                 $config['password'],
                 $config['database'],
                 $config['port']
-            ));
+            );
             if ($resource === false) {
                 throw new Exception(
                     'Couldn\'t establish connection: ' . $resource->error . '.'
