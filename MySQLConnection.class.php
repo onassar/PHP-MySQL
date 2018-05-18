@@ -1,8 +1,8 @@
 <?php
 
     // dependecy checks
-    if (in_array('mysql', get_loaded_extensions()) === false) {
-        throw new Exception('MySQL extension needs to be installed.');
+    if (in_array('mysqli', get_loaded_extensions()) === false) {
+        throw new Exception('mysqli module needs to be installed.');
     }
 
     /**
