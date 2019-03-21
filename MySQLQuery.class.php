@@ -153,7 +153,7 @@
                     $results[] = $result;
                 }
                 $this->_results = $results;
-            } else if (in_array($this->_type, array('show')) === true) {
+            } elseif (in_array($this->_type, array('show')) === true) {
                 $results = array();
                 while ($result = $this->_results->fetch_array()) {
                     $results[] = $result;
