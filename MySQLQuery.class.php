@@ -48,8 +48,8 @@
          * 
          * Microseconds marking the end of the query, after having run.
          * 
-         * @var     float
          * @access  protected
+         * @var     float
          */
         protected $_end;
 
@@ -58,8 +58,8 @@
          * 
          * Results after a query has been executed.
          * 
-         * @var     mixed
          * @access  protected
+         * @var     mixed
          */
         protected $_raw;
 
@@ -68,8 +68,8 @@
          * 
          * Formatted results available for return and usage (not raw).
          * 
-         * @var     mixed
          * @access  protected
+         * @var     mixed
          */
         protected $_results;
 
@@ -78,8 +78,8 @@
          * 
          * Microseconds marking the start of the query.
          * 
-         * @var     float
          * @access  protected
+         * @var     float
          */
         protected $_start;
 
@@ -88,8 +88,8 @@
          * 
          * SQL statement that will be/has been run.
          * 
-         * @var     string
          * @access  protected
+         * @var     string
          */
         protected $_statement;
 
@@ -98,8 +98,8 @@
          * 
          * Type of query being run (select, update, etc.)
          * 
-         * @var     string
          * @access  protected
+         * @var     string
          */
         protected $_type;
 

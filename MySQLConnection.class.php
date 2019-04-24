@@ -39,8 +39,8 @@
          * 
          * Array of query-type frequencies.
          * 
-         * @var     array
          * @access  protected
+         * @var     array
          */
         protected static $_analytics = array(
             'deletes' => 0,
@@ -55,16 +55,16 @@
         /**
          * _benchmark
          * 
-         * @var     boolean (default: false)
          * @access  protected
+         * @var     bool (default: false)
          */
         protected static $_benchmark = false;
 
         /**
          * _inserted
          * 
-         * @var     integer
          * @access  protected
+         * @var     int
          */
         protected static $_inserted;
 
@@ -74,8 +74,8 @@
          * Array contain MySQLQuery objects, useful for logging and performance
          * measurements.
          * 
-         * @var     array (default: array())
          * @access  protected
+         * @var     array (default: array())
          */
         protected static $_queries = array();
 
@@ -84,16 +84,16 @@
          * 
          * A resource link to a persistant mysql connection.
          * 
-         * @var     resource
          * @access  protected
+         * @var     resource
          */
         protected static $_resource;
 
         /**
          * _timeout
          * 
-         * @var     integer (default: 5)
          * @access  protected
+         * @var     int (default: 5)
          */
         protected static $_timeout = 5;
 
@@ -102,7 +102,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getCumulativeQueryDuration()
         {
@@ -120,7 +120,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfDeleteQueries()
         {
@@ -134,7 +134,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfExplainQueries()
         {
@@ -146,7 +146,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getInsertedId()
         {
@@ -160,7 +160,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfInsertQueries()
         {
@@ -187,7 +187,7 @@
          * 
          * @access  public
          * @static
-         * @param   boolean $format (default: true)
+         * @param   bool $format (default: true)
          * @return  array
          */
         public static function getQueries($format = true)
@@ -216,7 +216,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfSelectQueries()
         {
@@ -230,7 +230,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfShowQueries()
         {
@@ -258,7 +258,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfUpdateQueries()
         {
@@ -272,7 +272,7 @@
          * 
          * @access  public
          * @static
-         * @return  integer
+         * @return  int
          */
         public static function getNumberOfUseQueries()
         {
@@ -285,7 +285,7 @@
          * @access  public
          * @static
          * @param   array $config
-         * @param   boolean $benchmark (default: false)
+         * @param   bool $benchmark (default: false)
          * @return  void
          */
         public static function init(array $config, $benchmark = false)
@@ -356,7 +356,7 @@
          * 
          * @access  public
          * @static
-         * @param   integer $timeout
+         * @param   int $timeout
          * @return  void
          */
         public static function setTimeout($timeout)
