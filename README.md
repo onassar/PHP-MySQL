@@ -18,49 +18,43 @@ was done intentionally to decouple data processing logic from database access.
 ### Sample MySQL Connection
 
 ``` php
-<?php
+// load dependency
+require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
 
-    // load dependency
-    require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
-    
-    // database credentials and connection
-    $database = array(
-        'host' => 'localhost',
-        'port' => 3306,
-        'username' => '<username>',
-        'password' => '<password>'
-    );
-    MySQLConnection::init($database);
-    
-    // output resource object
-    $resource = MySQLConnection::getLink();
-    print_r($resource);
-    exit(0);
+// database credentials and connection
+$database = array(
+    'host' => 'localhost',
+    'port' => 3306,
+    'username' => '<username>',
+    'password' => '<password>'
+);
+MySQLConnection::init($database);
 
+// output resource object
+$resource = MySQLConnection::getLink();
+print_r($resource);
+exit(0);
 ```
 
 ### Sample MySQL Query
 
 ``` php
-<?php
+// load dependencies
+require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
+require_once APP . '/vendors/PHP-MySQL/MySQLQuery.class.php';
 
-    // load dependencies
-    require_once APP . '/vendors/PHP-MySQL/MySQLConnection.class.php';
-    require_once APP . '/vendors/PHP-MySQL/MySQLQuery.class.php';
-    
-    // database credentials and connection
-    $database = array(
-        'host' => 'localhost',
-        'port' => 3306,
-        'username' => '<username>',
-        'password' => '<password>'
-    );
-    MySQLConnection::init($database);
-    
-    // database select; query; output
-    new MySQLQuery('USE `mysql`');
-    $query = new MySQLQuery('SELECT * FROM `user`');
-    print_r($query->getResults());
-    exit(0);
+// database credentials and connection
+$database = array(
+    'host' => 'localhost',
+    'port' => 3306,
+    'username' => '<username>',
+    'password' => '<password>'
+);
+MySQLConnection::init($database);
 
+// database select; query; output
+new MySQLQuery('USE `mysql`');
+$query = new MySQLQuery('SELECT * FROM `user`');
+print_r($query->getResults());
+exit(0);
 ```
