@@ -82,7 +82,7 @@
         /**
          * _resource
          * 
-         * A resource link to a persistant mysql connection.
+         * A resource link to a persistent mysql connection.
          * 
          * @access  protected
          * @var     resource

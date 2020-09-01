@@ -16,7 +16,7 @@
     /**
      * MySQLQuery
      * 
-     * Performs and measures queries against a persistant MySQL connection.
+     * Performs and measures queries against a persistent MySQL connection.
      * 
      * @author  Oliver Nassar <onassar@gmail.com>
      * @example
