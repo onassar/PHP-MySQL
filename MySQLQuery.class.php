@@ -44,16 +44,6 @@
     class MySQLQuery
     {
         /**
-         * _end
-         * 
-         * Microseconds marking the end of the query, after having run.
-         * 
-         * @access  protected
-         * @var     float
-         */
-        protected $_end;
-
-        /**
          * _raw
          * 
          * Results after a query has been executed.
@@ -74,24 +64,22 @@
         protected $_results;
 
         /**
-         * _start
-         * 
-         * Microseconds marking the start of the query.
-         * 
-         * @access  protected
-         * @var     float
-         */
-        protected $_start;
-
-        /**
          * _statement
          * 
          * SQL statement that will be/has been run.
          * 
          * @access  protected
-         * @var     string
+         * @var     null|string (default: null)
          */
-        protected $_statement;
+        protected $_statement = null;
+
+        /**
+         * _timestamps
+         * 
+         * @access  protected
+         * @var     float
+         */
+        protected $_timestamps;
 
         /**
          * _type
@@ -99,9 +87,9 @@
          * Type of query being run (select, update, etc.)
          * 
          * @access  protected
-         * @var     string
+         * @var     null|string (default: null)
          */
-        protected $_type;
+        protected $_type = null;
 
         /**
          * __construct
@@ -110,25 +98,58 @@
          * @param   string $statement
          * @return  void
          */
-        public function __construct($statement)
+        public function __construct(string $statement)
         {
-            // metrics/run
             $this->_statement = $statement;
-            $this->_start = microtime(true);
+            $this->__setType();
+            $this->__setTimestamp('start');
             $this->_raw = $this->_run($statement);
-            $this->_end = microtime(true);
-            $this->_type = strtolower(current(explode(' ', $this->_statement)));
-
-            // query failed
-            if ($this->_raw === false) {
-                $resource = MySQLConnection::getLink();
-                throw new Exception(
-                    '"' . ($statement) . '": ' . ($resource->error) . '.'
-                );
-            }
-
-            // log
+            $this->__setTimestamp('end');
+            $this->_handleFailedStatementExecution();
             $this->_log();
+        }
+
+        /**
+         * __setTimestamp
+         * 
+         * @access  private
+         * @param   string $key
+         * @return  void
+         */
+        private function __setTimestamp(string $key): void
+        {
+            $this->_timestamps[$key] = microtime(true);
+        }
+
+        /**
+         * __setType
+         * 
+         * @access  private
+         * @return  void
+         */
+        private function __setType(): void
+        {
+            $statement = $this->_statement;
+            $type = strtolower(current(explode(' ', $statement)));
+            $this->_type = $type;
+        }
+
+        /**
+         * _handleFailedStatementExecution
+         * 
+         * @throws  Exception
+         * @access  protected
+         * @return  bool
+         */
+        protected function _handleFailedStatementExecution(): bool
+        {
+            if ($this->_raw !== false) {
+                return false;
+            }
+            $connection = MySQLConnection::getConnection();
+            $error = $connection->error;
+            $msg = '"' . ($statement) . '": ' . ($error) . '.';
+            throw new Exception($msg);
         }
 
         /**
@@ -190,7 +211,7 @@
          * @access  protected
          * @return  void
          */
-        protected function _log()
+        protected function _log(): void
         {
             MySQLConnection::log($this);
         }
@@ -198,13 +219,16 @@
         /**
          * _run
          * 
+         * @see     https://www.php.net/manual/en/mysqli.query.php
          * @access  protected
          * @param   string $statement
-         * @return  void
+         * @return  mysqli_result|bool
          */
-        protected function _run($statement)
+        protected function _run(string $statement)
         {
-            return MySQLConnection::getLink()->query($statement);
+            $connection = MySQLConnection::getConnection();
+            $response = $connection->query($statement);
+            return $response;
         }
 
         /**
@@ -215,10 +239,13 @@
          * @access  public
          * @return  float
          */
-        public function getDuration()
+        public function getDuration(): float
         {
-            $difference = $this->_end - $this->_start;
-            return round($difference, 4);
+            $end = $this->_timestamps['end'];
+            $start = $this->_timestamps['start'];
+            $difference = $end - $start;
+            $difference = round($difference, 4);
+            return $difference;
         }
 
         /**
@@ -240,26 +267,24 @@
         /**
          * getStatement
          * 
-         * Returns the SQL statement issued.
-         * 
          * @access  public
          * @return  string
          */
-        public function getStatement()
+        public function getStatement(): string
         {
-            return $this->_statement;
+            $statement = $this->_statement;
+            return $statement;
         }
 
         /**
          * getType
          * 
-         * Returns the type of query run.
-         * 
          * @access  public
          * @return  string
          */
-        public function getType()
+        public function getType(): string
         {
-            return $this->_type;
+            $type = $this->_type;
+            return $type;
         }
     }
