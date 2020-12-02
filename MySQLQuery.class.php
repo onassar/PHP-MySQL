@@ -227,10 +227,10 @@
          */
         protected function _getStatementExecutionErrorMessage(): string
         {
-            $databaseName = MySQLConnection::getDatabaseName();
             $statement = $this->_statement;
             $connection = MySQLConnection::getConnection();
             $error = $connection->error;
+            $databaseName = MySQLConnection::getDatabaseName();
             $msg = '"' . ($statement) . '": ' . ($error) . '.';
             $msg = ($msg) . ' Database name: ' . ($databaseName);
             return $msg;
@@ -293,8 +293,8 @@
             if ($this->_statementFormattedResult === null) {
                 $this->_formatResult();
             }
-            $result = $this->_statementFormattedResult;
-            return $result;
+            $formattedResult = $this->_statementFormattedResult;
+            return $formattedResult;
         }
 
         /**

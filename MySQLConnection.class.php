@@ -115,7 +115,7 @@
         protected static function _benchmark(MySQLQuery $mySQLQuery): bool
         {
             $benchmark = self::$_benchmark;
-            if (self::$_benchmark === false) {
+            if ($benchmark === false) {
                 return false;
             }
             $duration = $mySQLQuery->getDuration();
@@ -369,14 +369,14 @@
             }
 
             // formatted response
-            $queries = array();
+            $formattedQueries = array();
             foreach ($queries as $query) {
                 $duration = $query->getDuration();
                 $statement = $query->getStatement();
                 $type = $query->getType();
-                $queries[] = compact('duration', 'statement', 'type');
+                $formattedQueries[] = compact('duration', 'statement', 'type');
             }
-            return $queries;
+            return $formattedQueries;
         }
 
         /**
@@ -459,9 +459,9 @@
             if ($selectedDatabaseName === $databaseName) {
                 return false;
             }
-            self::$_selectedDatabaseName = $databaseName;
             $connection = self::$_connection;
             $connection->select_db($databaseName);
+            self::$_selectedDatabaseName = $databaseName;
             return true;
         }
 
