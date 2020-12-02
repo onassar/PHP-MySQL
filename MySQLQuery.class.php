@@ -37,32 +37,12 @@
      *     // database select; query; output
      *     new MySQLQuery('USE `mysql`');
      *     $query = new MySQLQuery('SELECT * FROM `user`');
-     *     print_r($query->getResults());
+     *     print_r($query->getFormattedResult());
      *     exit(0);
      * </code>
      */
     class MySQLQuery
     {
-        /**
-         * _raw
-         * 
-         * Results after a query has been executed.
-         * 
-         * @access  protected
-         * @var     mixed
-         */
-        protected $_raw;
-
-        /**
-         * _results
-         * 
-         * Formatted results available for return and usage (not raw).
-         * 
-         * @access  protected
-         * @var     mixed
-         */
-        protected $_results;
-
         /**
          * _statement
          * 
@@ -74,12 +54,32 @@
         protected $_statement = null;
 
         /**
+         * _statementFormattedResult
+         * 
+         * Formatted results available for return and usage (not raw).
+         * 
+         * @access  protected
+         * @var     null|array (default: null)
+         */
+        protected $_statementFormattedResult = null;
+
+        /**
+         * _statementResult
+         * 
+         * Results after a query has been executed.
+         * 
+         * @access  protected
+         * @var     null|mysqli_result|bool (default: null)
+         */
+        protected $_statementResult = null;
+
+        /**
          * _timestamps
          * 
          * @access  protected
-         * @var     float
+         * @var     array (default: array())
          */
-        protected $_timestamps;
+        protected $_timestamps = array();
 
         /**
          * _type
@@ -96,17 +96,34 @@
          * 
          * @access  public
          * @param   string $statement
+         * @param   null|string $databaseName (default: null)
          * @return  void
          */
-        public function __construct(string $statement)
+        public function __construct(string $statement, ?string $databaseName = null)
         {
+            MySQLConnection::selectDatabase($databaseName);
             $this->_statement = $statement;
             $this->__setType();
             $this->__setTimestamp('start');
-            $this->_raw = $this->_run($statement);
+            $this->__runStatement($statement);
             $this->__setTimestamp('end');
             $this->_handleFailedStatementExecution();
             $this->_log();
+        }
+
+        /**
+         * __runStatement
+         * 
+         * @see     https://www.php.net/manual/en/mysqli.query.php
+         * @access  private
+         * @param   string $statement
+         * @return  void
+         */
+        private function __runStatement(string $statement): void
+        {
+            $connection = MySQLConnection::getConnection();
+            $result = $connection->query($statement);
+            $this->_statementResult = $result;
         }
 
         /**
@@ -135,6 +152,91 @@
         }
 
         /**
+         * _formatResult
+         * 
+         * Formats a raw result set if applicable.
+         * 
+         * @note    The complicated key / value logic below is to prevent using
+         *          references within the array, as I was running into issues in
+         *          last version of this method that I just do not want to deal
+         *          with at the moment. So while it's a bit uglier, it should
+         *          work quite reliably.
+         * @access  protected
+         * @return  bool
+         */
+        protected function _formatResult(): bool
+        {
+            /**
+             * Explain and Select queries
+             * 
+             */
+            $statementResult = $this->_statementResult;
+            if (in_array($this->_type, array('explain', 'select')) === true) {
+                $formattedResult = array();
+                while ($result = $statementResult->fetch_assoc()) {
+                    $formattedResult[] = $result;
+                }
+                $this->_statementFormattedResult = $formattedResult;
+                return true;
+            }
+
+            /**
+             * Show queries
+             * 
+             */
+            if (in_array($this->_type, array('show')) === true) {
+                $formattedResult = array();
+                while ($result = $statementResult->fetch_array()) {
+                    $formattedResult[] = $result;
+                }
+                $lowercase = strtolower($this->_statement);
+                if (strstr($lowercase, 'show tables') !== false) {
+                    foreach ($formattedResult as $key => $value) {
+                        $formattedResult[$key] = $value[0];
+                    }
+                } elseif (strstr($lowercase, 'show variables') !== false) {
+                    foreach ($formattedResult as $key => $result) {
+                        foreach ($result as $secondaryKey => $value) {
+                            if (is_numeric($secondaryKey) === true) {
+                                unset($formattedResult[$key][$secondaryKey]);
+                            }
+                        }
+                    }
+                } elseif (strstr($lowercase, 'show index') !== false) {
+                    foreach ($formattedResult as $key => $result) {
+                        foreach ($result as $secondaryKey => $value) {
+                            if (is_numeric($secondaryKey) === true) {
+                                unset($formattedResult[$key][$secondaryKey]);
+                            }
+                        }
+                    }
+                }
+                $this->_statementFormattedResult = $formattedResult;
+                return true;
+            }
+
+            // Alternative query type
+            return false;
+        }
+
+        /**
+         * _getStatementExecutionErrorMessage
+         * 
+         * @access  protected
+         * @return  string
+         */
+        protected function _getStatementExecutionErrorMessage(): string
+        {
+            $databaseName = MySQLConnection::getDatabaseName();
+            $statement = $this->_statement;
+            $connection = MySQLConnection::getConnection();
+            $error = $connection->error;
+            $msg = '"' . ($statement) . '": ' . ($error) . '.';
+            $msg = ($msg) . ' Database name: ' . ($databaseName);
+            return $msg;
+        }
+
+        /**
          * _handleFailedStatementExecution
          * 
          * @throws  Exception
@@ -143,66 +245,11 @@
          */
         protected function _handleFailedStatementExecution(): bool
         {
-            if ($this->_raw !== false) {
-                return false;
+            if ($this->_statementResult === false) {
+                $msg = $this->_getStatementExecutionErrorMessage();
+                throw new Exception($msg);
             }
-            $connection = MySQLConnection::getConnection();
-            $error = $connection->error;
-            $msg = '"' . ($statement) . '": ' . ($error) . '.';
-            throw new Exception($msg);
-        }
-
-        /**
-         * _format
-         * 
-         * Formats a raw result set if applicable.
-         * 
-         * @note    The complicated key / value logic below is to prevent using
-         *          references within the array, as I was running into issues in
-         *          last version of this method that I just do not want to deal
-         *          with at the moment. So while it's a big uglier, it should
-         *          work quite dependably.
-         * @access  protected
-         * @return  void
-         */
-        protected function _format()
-        {
-            $this->_results = $this->_raw;
-            if (in_array($this->_type, array('explain', 'select')) === true) {
-                $results = array();
-                while ($result = $this->_results->fetch_assoc()) {
-                    $results[] = $result;
-                }
-                $this->_results = $results;
-            } elseif (in_array($this->_type, array('show')) === true) {
-                $results = array();
-                while ($result = $this->_results->fetch_array()) {
-                    $results[] = $result;
-                }
-                $lowercase = strtolower($this->_statement);
-                if (strstr($lowercase, 'show tables') !== false) {
-                    foreach ($results as $key => $value) {
-                        $results[$key] = $value[0];
-                    }
-                } elseif (strstr($lowercase, 'show variables') !== false) {
-                    foreach ($results as $key => $result) {
-                        foreach ($result as $secondaryKey => $value) {
-                            if (is_numeric($secondaryKey) === true) {
-                                unset($results[$key][$secondaryKey]);
-                            }
-                        }
-                    }
-                } elseif (strstr($lowercase, 'show index') !== false) {
-                    foreach ($results as $key => $result) {
-                        foreach ($result as $secondaryKey => $value) {
-                            if (is_numeric($secondaryKey) === true) {
-                                unset($results[$key][$secondaryKey]);
-                            }
-                        }
-                    }
-                }
-                $this->_results = $results;
-            }
+            return false;
         }
 
         /**
@@ -214,21 +261,6 @@
         protected function _log(): void
         {
             MySQLConnection::log($this);
-        }
-
-        /**
-         * _run
-         * 
-         * @see     https://www.php.net/manual/en/mysqli.query.php
-         * @access  protected
-         * @param   string $statement
-         * @return  mysqli_result|bool
-         */
-        protected function _run(string $statement)
-        {
-            $connection = MySQLConnection::getConnection();
-            $response = $connection->query($statement);
-            return $response;
         }
 
         /**
@@ -249,19 +281,20 @@
         }
 
         /**
-         * getResults
+         * getFormattedResult
          * 
          * Returns formatted results of the executed query.
          * 
          * @access  public
          * @return  array
          */
-        public function getResults()
+        public function getFormattedResult()
         {
-            if ($this->_results === null) {
-                $this->_format();
+            if ($this->_statementFormattedResult === null) {
+                $this->_formatResult();
             }
-            return $this->_results;
+            $result = $this->_statementFormattedResult;
+            return $result;
         }
 
         /**
