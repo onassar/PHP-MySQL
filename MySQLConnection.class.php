@@ -75,6 +75,10 @@
         /**
          * _selectedDatabaseName
          * 
+         * A string reference to the database that is currently selected, by
+         * it's name. This is useful for app's whereby multiple databases are
+         * used within the same app.
+         * 
          * @access  protected
          * @var     null|string (default: null)
          */
