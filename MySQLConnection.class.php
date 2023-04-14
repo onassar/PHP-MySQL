@@ -425,6 +425,18 @@
             $port = $configData['port'];
             $args = array($host, $username, $password, $database, $port);
             $connection = new mysqli(... $args);
+
+            // PlanetScale testing
+            // $connection = mysqli_init();
+            // $connection->ssl_set(NULL, NULL, '/etc/ssl/certs/ca-certificates.crt', NULL, NULL);
+            // $connection->real_connect(
+            //     $host,
+            //     $username,
+            //     $password,
+            //     $database
+            // );
+
+            // Done
             self::$_connection = $connection;
             self::_handleFailedInstantiation();
         }
