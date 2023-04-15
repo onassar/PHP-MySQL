@@ -427,18 +427,18 @@
 
             // PlanetScale testing
             $role = \Config\Base::getRole();
-            if ($role === 'local') {
+            // if ($role === 'local') {
                 $connection = new mysqli(... $args);
-            } elseif ($role === 'dev') {
-                $connection = mysqli_init();
-                $connection->ssl_set(NULL, NULL, '/etc/ssl/certs/ca-certificates.crt', NULL, NULL);
-                $connection->real_connect(
-                    $host,
-                    $username,
-                    $password,
-                    $database
-                );
-            }
+            // } elseif ($role === 'dev') {
+            //     $connection = mysqli_init();
+            //     $connection->ssl_set(NULL, NULL, '/etc/ssl/certs/ca-certificates.crt', NULL, NULL);
+            //     $connection->real_connect(
+            //         $host,
+            //         $username,
+            //         $password,
+            //         $database
+            //     );
+            // }
 
             // Done
             self::$_connection = $connection;
